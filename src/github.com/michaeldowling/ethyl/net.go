@@ -1,6 +1,8 @@
 package ethyl
 
-import "log"
+import (
+    "log"
+)
 
 type NetAPI struct {
     Client *EthylClient
@@ -15,11 +17,14 @@ func CreateNetAPI(client *EthylClient) (NetAPI) {
 
 func (n *NetAPI) Version() (string, error) {
 
-    var result string;
+    var result EthereumNetworkResponse;
 
     n.Client.Call("net_version", "", &result);
-    log.Println("Result: " + result);
-    return result, nil;
+    version := result.Result;
+
+
+    log.Println("Version: " + version);
+    return version, nil;
 
 
 }

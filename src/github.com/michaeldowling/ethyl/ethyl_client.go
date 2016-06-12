@@ -1,8 +1,10 @@
 package ethyl
 
 import (
-    "net/rpc"
-    "log"
+    "net/http"
+    "bytes"
+    "io/ioutil"
+    "encoding/json"
 )
 
 type EthylClient struct {
@@ -11,7 +13,6 @@ type EthylClient struct {
 
     Net       NetAPI;
 
-    rpcClient *rpc.Client
 }
 
 func CreateClient(host string, port int) (EthylClient, error) {
@@ -22,33 +23,29 @@ func CreateClient(host string, port int) (EthylClient, error) {
     return client, nil;
 }
 
-func (client *EthylClient) Dial() (error) {
+func (client *EthylClient) Call(methodName string, args string, replyValue *EthereumNetworkResponse) (error) {
 
-    address := client.Host + ":8545";
-    rpcDialClient, err := rpc.Dial("tcp", address);
+    // Marshall into JSON string
+    requestParams := EthereumNetworkRequest{Id:"67", JsonRpcVersion:"2.0", Method:methodName};
+    responseDocument := EthereumNetworkResponse{};
+    requestParamsBytes, err := json.Marshal(requestParams);
+
     if (err != nil) {
-        log.Fatal("Error Dialing into " + address + " | " + err.Error());
         return err;
     }
 
-    client.rpcClient = rpcDialClient;
+    response, err := http.Post("http://localhost:8545", "application/json", bytes.NewBuffer(requestParamsBytes));
+    defer response.Body.Close();
 
-    return nil;
 
-}
-
-func (client *EthylClient) Call(methodName string, args interface{}, replyValue interface{}) (error) {
-
-    dialError := client.Dial();
-    if (dialError != nil) {
-        return dialError;
+    if (err != nil) {
+        return err;
     }
 
-    callError := client.rpcClient.Call(methodName, args, replyValue);
-    log.Println("Reply Value:  ");
-    if (callError != nil) {
-        return callError;
-    }
+    responseBody, _ := ioutil.ReadAll(response.Body);
+    json.Unmarshal(responseBody, &responseDocument);
+
+    *replyValue = responseDocument;
 
     return nil;
 }

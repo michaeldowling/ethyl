@@ -23,8 +23,10 @@ func TestAPINetVersion(t *testing.T) {
     version, err := client.Net.Version();
 
     assert.NotNil(t, version);
-    assert.Equal(t, "69", version);
+    assert.Equal(t, "100", version);
     assert.Nil(t, err);
 
 
 }
+
+
