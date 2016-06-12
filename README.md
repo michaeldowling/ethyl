@@ -7,11 +7,12 @@ Ethyl attempts to match as closely as possible the JSON-RPC API that is publishe
 
 ### net_version
 
-*Usage:*
+**Usage:**
+
     client, clientErr := CreateClient("localhost", 8545);
     assert.Nil(t, clientErr);
     
-    protocolVersion, _ := client.Eth.ProtocolVersion();
-    assert.True(t, protocolVersion > 0, "Protocol Version should be greater than 0");
+    version, _ := client.Net.Version();
+    assert.True(t, version > 0, "Protocol Version should be greater than 0");
 
 
