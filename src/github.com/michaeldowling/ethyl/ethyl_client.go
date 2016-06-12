@@ -26,10 +26,15 @@ func CreateClient(host string, port int) (EthylClient, error) {
     return client, nil;
 }
 
-func (client *EthylClient) Call(methodName string, args string, replyValue interface{}) (error) {
+func (client *EthylClient) Call(methodName string, args []string, replyValue interface{}) (error) {
 
     // Marshall into JSON string
-    requestParams := EthereumNetworkRequest{Id:"67", JsonRpcVersion:"2.0", Method:methodName};
+    var requestParams EthereumNetworkRequest;
+    if (args != nil) {
+        requestParams = EthereumNetworkRequest{Id:"67", JsonRpcVersion:"2.0", Method:methodName, Params:args};
+    } else {
+        requestParams = EthereumNetworkRequest{Id:"67", JsonRpcVersion:"2.0", Method:methodName};
+    }
     requestParamsBytes, err := json.Marshal(requestParams);
 
     if (err != nil) {

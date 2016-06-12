@@ -22,7 +22,7 @@ func (n *NetAPI) Version() (string, error) {
 
     var result StringResultEthereumNetworkResponse;
 
-    n.Client.Call("net_version", "", &result);
+    n.Client.Call("net_version", nil, &result);
     version := result.Result;
 
 
@@ -35,7 +35,7 @@ func (n *NetAPI) IsListening() (bool, error) {
 
     var result BooleanResultEthereumNetworkResponse;
 
-    n.Client.Call("net_listening", "", &result);
+    n.Client.Call("net_listening", nil, &result);
     listening := result.Result;
 
     return listening, nil;
@@ -46,7 +46,7 @@ func (n *NetAPI) PeerCount() (uint64, error) {
 
     var result StringResultEthereumNetworkResponse;
 
-    n.Client.Call("net_peerCount", "", &result);
+    n.Client.Call("net_peerCount", nil, &result);
     peerCountHex := result.Result;
 
     log.Println("Peer Count Hex:  " + peerCountHex);

@@ -39,3 +39,15 @@ func TestAPIEthSyncing(t *testing.T) {
 
 }
 
+func TestEthAPIGetTransactionByHash(t *testing.T) {
+
+    client, clientErr := CreateClient("localhost", 8545);
+    assert.Nil(t, clientErr);
+
+    tx, err := client.Eth.GetTransactionByHash("0xe564bd605dcf1e70646e6e0a13294199cdb6f026fd74a11357f07d9863c8b989");
+    assert.Nil(t, err);
+    assert.NotNil(t, tx);
+
+
+}
+

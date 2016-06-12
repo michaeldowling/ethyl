@@ -2,8 +2,6 @@ package util
 
 import (
     "strings"
-    "log"
-
     "math"
 )
 
@@ -29,9 +27,7 @@ var HEXTABLE = map[string]int64{
 func ToInt64(hex string) (int64, error) {
 
     // Do we have a "0x" in the beginning?
-    log.Println("Hex:  " + hex);
     hex = strings.ToLower(strings.Replace(hex, "0x", "", 1));
-    log.Println("Hex:  " + hex);
 
     // # of chars
     var total int64 = 0;
