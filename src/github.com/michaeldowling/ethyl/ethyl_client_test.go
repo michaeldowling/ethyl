@@ -15,18 +15,4 @@ func TestCreateClient(t *testing.T) {
 
 }
 
-func TestAPINetVersion(t *testing.T) {
-
-    client, clientErr := CreateClient("localhost", 8545);
-    assert.Nil(t, clientErr);
-
-    version, err := client.Net.Version();
-
-    assert.NotNil(t, version);
-    assert.Equal(t, "100", version);
-    assert.Nil(t, err);
-
-
-}
-
 

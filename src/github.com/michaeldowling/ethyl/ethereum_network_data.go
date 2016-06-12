@@ -7,9 +7,16 @@ type EthereumNetworkRequest struct {
     Id             string `json:"id"`
 }
 
-type EthereumNetworkResponse struct {
+type StringResultEthereumNetworkResponse struct {
     Id             string `json:"id"`
     JsonRpcVersion string `json:"jsonrpc"`
     Result         string `json:"result"`
 }
+
+type BooleanResultEthereumNetworkResponse struct {
+    Id             string `json:"id"`
+    JsonRpcVersion string `json:"jsonrpc"`
+    Result         bool   `json:"result"`
+}
+
 

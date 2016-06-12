@@ -5,13 +5,15 @@ import (
     "bytes"
     "io/ioutil"
     "encoding/json"
+    "log"
 )
 
 type EthylClient struct {
-    Host      string;
-    Port      int;
+    Host string;
+    Port int;
 
-    Net       NetAPI;
+    Net  NetAPI;
+    Eth  EthAPI;
 
 }
 
@@ -19,15 +21,15 @@ func CreateClient(host string, port int) (EthylClient, error) {
 
     client := EthylClient{Host:host, Port:port};
     client.Net = CreateNetAPI(&client);
+    client.Eth = CreateEthAPI(&client);
 
     return client, nil;
 }
 
-func (client *EthylClient) Call(methodName string, args string, replyValue *EthereumNetworkResponse) (error) {
+func (client *EthylClient) Call(methodName string, args string, replyValue interface{}) (error) {
 
     // Marshall into JSON string
     requestParams := EthereumNetworkRequest{Id:"67", JsonRpcVersion:"2.0", Method:methodName};
-    responseDocument := EthereumNetworkResponse{};
     requestParamsBytes, err := json.Marshal(requestParams);
 
     if (err != nil) {
@@ -43,9 +45,9 @@ func (client *EthylClient) Call(methodName string, args string, replyValue *Ethe
     }
 
     responseBody, _ := ioutil.ReadAll(response.Body);
-    json.Unmarshal(responseBody, &responseDocument);
+    log.Printf("Response Body:  %s", responseBody);
 
-    *replyValue = responseDocument;
+    json.Unmarshal(responseBody, replyValue);
 
     return nil;
 }
