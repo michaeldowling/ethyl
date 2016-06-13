@@ -18,6 +18,16 @@ type Transaction struct {
     Gas              int64
     GasPrice         int64
     Input            string
+};
+
+type TransactionInstructions struct {
+
+    From string
+    To string
+    Gas int64
+    Data string
+    Value int64
+
 }
 
 
@@ -106,6 +116,14 @@ func (e *EthAPI) GetTransactionByHash(transactionHash string) (Transaction, erro
     };
 
     return transaction, nil;
+
+}
+
+func (e *EthAPI) SendTransaction(instructions TransactionInstructions, transactionArguments ... interface{}) (string, error) {
+
+
+
+    return "", nil;
 
 }
 
