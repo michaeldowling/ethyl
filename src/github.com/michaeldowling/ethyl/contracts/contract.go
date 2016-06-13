@@ -25,4 +25,3 @@ func (c *Contract) New() (error) {
 
 }
 
-
