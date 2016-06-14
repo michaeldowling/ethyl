@@ -4,6 +4,8 @@ import (
     "log"
     "strconv"
     "github.com/michaeldowling/ethyl/util"
+    "encoding/json"
+    "errors"
 )
 
 type Transaction struct {
@@ -21,12 +23,11 @@ type Transaction struct {
 };
 
 type TransactionInstructions struct {
-
-    From string
-    To string
-    Gas int64
-    Data string
-    Value int64
+    From  string `json:"from"`
+    To    string `json:"to"`
+    Gas   int64 `json:"gas"`
+    Data  string `json:"data"`
+    Value int64 `json:"value"`
 
 }
 
@@ -121,9 +122,21 @@ func (e *EthAPI) GetTransactionByHash(transactionHash string) (Transaction, erro
 
 func (e *EthAPI) SendTransaction(instructions TransactionInstructions, transactionArguments ... interface{}) (string, error) {
 
+    // Convert transaction instructions into json object
+    json, err := json.Marshal(instructions);
+    if (err != nil) {
+        return "", errors.New("Unable to encode TransactionInstructions into JSON:  " + err.Error());
+    }
 
+    var result StringResultEthereumNetworkResponse;
+    jsonArgs := []string{string(json)};
+    txErr := e.Client.Call("eth_sendTransaction", jsonArgs, &result);
 
-    return "", nil;
+    if (txErr != nil) {
+        return "", errors.New("Unable to send transaction to network:  " + txErr.Error());
+    }
+
+    return result.Result, nil;
 
 }
 

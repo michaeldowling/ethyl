@@ -6,7 +6,7 @@ import (
     "log"
 )
 
-func TestAPIEthProtocolVersion(t *testing.T) {
+func TestAPI_EthProtocolVersion(t *testing.T) {
 
     client, clientErr := CreateClient("localhost", 8545);
     assert.Nil(t, clientErr);
@@ -16,7 +16,7 @@ func TestAPIEthProtocolVersion(t *testing.T) {
 
 }
 
-func TestAPIEthGasPrice(t *testing.T) {
+func TestAPI_EthGasPrice(t *testing.T) {
 
     client, clientErr := CreateClient("localhost", 8545);
     assert.Nil(t, clientErr);
@@ -28,7 +28,7 @@ func TestAPIEthGasPrice(t *testing.T) {
 
 }
 
-func TestAPIEthSyncing(t *testing.T) {
+func TestAPI_EthSyncing(t *testing.T) {
 
     client, clientErr := CreateClient("localhost", 8545);
     assert.Nil(t, clientErr);
@@ -39,7 +39,7 @@ func TestAPIEthSyncing(t *testing.T) {
 
 }
 
-func TestEthAPIGetTransactionByHash(t *testing.T) {
+func TestEthAPI_GetTransactionByHash(t *testing.T) {
 
     client, clientErr := CreateClient("localhost", 8545);
     assert.Nil(t, clientErr);
@@ -47,6 +47,20 @@ func TestEthAPIGetTransactionByHash(t *testing.T) {
     tx, err := client.Eth.GetTransactionByHash("0xe564bd605dcf1e70646e6e0a13294199cdb6f026fd74a11357f07d9863c8b989");
     assert.Nil(t, err);
     assert.NotNil(t, tx);
+
+
+}
+
+func TestEthAPI_SendTransaction_EtherTransfer(t *testing.T) {
+
+    client, clientErr := CreateClient("localhost", 8545);
+    assert.Nil(t, clientErr);
+
+    instructions := TransactionInstructions{From:"0xabd5d148b31f38a8d2aa9eb041c478d36dd51c35", To:"0xabd5d148b31f38a8d2aa9eb041c478d36dd51c35", Value:10000};
+    txhash, err := client.Eth.SendTransaction(instructions);
+
+    assert.Nil(t, err);
+    assert.NotEmpty(t, txhash);
 
 
 }

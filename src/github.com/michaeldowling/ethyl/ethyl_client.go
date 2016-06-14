@@ -36,6 +36,7 @@ func (client *EthylClient) Call(methodName string, args []string, replyValue int
         requestParams = EthereumNetworkRequest{Id:"67", JsonRpcVersion:"2.0", Method:methodName};
     }
     requestParamsBytes, err := json.Marshal(requestParams);
+    log.Printf("Request Body:  %s \n", requestParamsBytes);
 
     if (err != nil) {
         return err;
