@@ -4,7 +4,6 @@ import (
     "log"
     "strconv"
     "github.com/michaeldowling/ethyl/util"
-    "encoding/json"
     "errors"
 )
 
@@ -122,15 +121,15 @@ func (e *EthAPI) GetTransactionByHash(transactionHash string) (Transaction, erro
 
 func (e *EthAPI) SendTransaction(instructions TransactionInstructions, transactionArguments ... interface{}) (string, error) {
 
-    // Convert transaction instructions into json object
-    json, err := json.Marshal(instructions);
-    if (err != nil) {
-        return "", errors.New("Unable to encode TransactionInstructions into JSON:  " + err.Error());
-    }
 
     var result StringResultEthereumNetworkResponse;
-    jsonArgs := []string{string(json)};
-    txErr := e.Client.Call("eth_sendTransaction", jsonArgs, &result);
+
+    jsonArgs := make([]string, len(transactionArguments));
+    for idx, argument := range transactionArguments {
+        jsonArgs[idx] = argument.(string);
+    }
+
+    txErr := e.Client.CallWithTransaction("eth_sendTransaction", instructions, jsonArgs, &result);
 
     if (txErr != nil) {
         return "", errors.New("Unable to send transaction to network:  " + txErr.Error());

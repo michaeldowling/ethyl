@@ -56,7 +56,7 @@ func TestEthAPI_SendTransaction_EtherTransfer(t *testing.T) {
     client, clientErr := CreateClient("localhost", 8545);
     assert.Nil(t, clientErr);
 
-    instructions := TransactionInstructions{From:"0xabd5d148b31f38a8d2aa9eb041c478d36dd51c35", To:"0xabd5d148b31f38a8d2aa9eb041c478d36dd51c35", Value:10000};
+    instructions := TransactionInstructions{From:"0x4cb40800a4965f544f8edb9b17b6859773b5908e", To:"0xabd5d148b31f38a8d2aa9eb041c478d36dd51c35", Gas:200000, Value:10000};
     txhash, err := client.Eth.SendTransaction(instructions);
 
     assert.Nil(t, err);

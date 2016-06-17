@@ -3,9 +3,11 @@ package ethyl
 type EthereumNetworkRequest struct {
     JsonRpcVersion string `json:"jsonrpc"`
     Method         string `json:"method"`
-    Params         []string `json:"params"`
+    Params         []interface{} `json:"params"`
     Id             string `json:"id"`
 }
+
+
 
 type StringResultEthereumNetworkResponse struct {
     Id             string `json:"id"`
