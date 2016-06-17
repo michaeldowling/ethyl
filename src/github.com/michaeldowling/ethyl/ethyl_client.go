@@ -57,3 +57,4 @@ func (client *EthylClient) Call(methodName string, args []string, replyValue int
 
     return nil;
 }
+
