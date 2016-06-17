@@ -39,6 +39,18 @@ func TestAPI_EthSyncing(t *testing.T) {
 
 }
 
+func TestEthAPI_Accounts(t *testing.T) {
+
+    client, clientErr := CreateClient("localhost", 8545);
+    assert.Nil(t, clientErr);
+
+    accounts, err := client.Eth.Accounts();
+    assert.Nil(t, err);
+    assert.NotNil(t, accounts);
+    assert.True(t, len(accounts) > 0);
+
+}
+
 func TestEthAPI_GetTransactionByHash(t *testing.T) {
 
     client, clientErr := CreateClient("localhost", 8545);
@@ -56,7 +68,10 @@ func TestEthAPI_SendTransaction_EtherTransfer(t *testing.T) {
     client, clientErr := CreateClient("localhost", 8545);
     assert.Nil(t, clientErr);
 
-    instructions := TransactionInstructions{From:"0x4cb40800a4965f544f8edb9b17b6859773b5908e", To:"0xabd5d148b31f38a8d2aa9eb041c478d36dd51c35", Gas:200000, Value:10000};
+    // get account first
+    assert.True(t, len(client.Accounts) > 0);
+
+    instructions := TransactionInstructions{From:client.Accounts[0], To:"0xabd5d148b31f38a8d2aa9eb041c478d36dd51c35", Gas:200000, Value:10};
     txhash, err := client.Eth.SendTransaction(instructions);
 
     assert.Nil(t, err);

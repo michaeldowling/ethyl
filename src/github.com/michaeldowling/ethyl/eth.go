@@ -56,6 +56,20 @@ func (e *EthAPI) ProtocolVersion() (uint64, error) {
 
 }
 
+func (e *EthAPI) Accounts() ([]string, error) {
+
+    var result GenericSliceResultEthereumNetworkResponse;
+
+    e.Client.Call("eth_accounts", nil, &result);
+    accounts := make([]string, len(result.Result));
+    for idx, item := range result.Result {
+        accounts[idx] = item.(string);
+    }
+
+    return accounts, nil;
+
+}
+
 func (e *EthAPI) GasPrice() (int64, error) {
 
     var result StringResultEthereumNetworkResponse;

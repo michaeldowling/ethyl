@@ -15,6 +15,12 @@ type StringResultEthereumNetworkResponse struct {
     Result         string `json:"result"`
 }
 
+type GenericSliceResultEthereumNetworkResponse struct {
+    Id string `json:"is"`
+    JsonRpcVersion string `json:"jsonepc"`
+    Result []interface{} `json:"result"`
+}
+
 type BooleanResultEthereumNetworkResponse struct {
     Id             string `json:"id"`
     JsonRpcVersion string `json:"jsonrpc"`

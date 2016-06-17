@@ -9,8 +9,10 @@ import (
 )
 
 type EthylClient struct {
+
     Host string;
     Port int;
+    Accounts []string;
 
     Net  NetAPI;
     Eth  EthAPI;
@@ -22,6 +24,14 @@ func CreateClient(host string, port int) (EthylClient, error) {
     client := EthylClient{Host:host, Port:port};
     client.Net = CreateNetAPI(&client);
     client.Eth = CreateEthAPI(&client);
+
+    // Pre-fetch accounts
+    accounts, accountsErr := client.Eth.Accounts();
+    if(accountsErr != nil) {
+        return client, accountsErr;
+    }
+
+    client.Accounts = accounts;
 
     return client, nil;
 }
