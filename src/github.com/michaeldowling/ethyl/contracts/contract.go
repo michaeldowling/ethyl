@@ -2,7 +2,7 @@ package contracts
 
 type Contract struct {
     ABI     string
-    Address string;
+    Address string
 }
 
 func DefineContract(abi string) (Contract, error) {
