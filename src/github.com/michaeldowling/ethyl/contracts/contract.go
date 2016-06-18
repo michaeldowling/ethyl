@@ -3,16 +3,24 @@ package contracts
 import (
     "encoding/json"
     "log"
+    "github.com/michaeldowling/ethyl"
 )
 
 type Contract struct {
-    Abi     ABI
-    Address string
+
+    Abi          ABI
+    Address      string
+    ContractCode EVMCode
+
+    Client       ethyl.EthylClient
+
 }
 
 type ABI struct {
     InterfaceDefinitions []ContractInterfaceDefinition
 }
+
+type EVMCode string;
 
 type ContractInterfaceDefinition struct {
     Constant bool `json:"constant"`
@@ -27,7 +35,7 @@ type InputOutputDefinition struct {
     EthereumType string `json:"type"`
 }
 
-func DefineContract(abi string) (Contract, error) {
+func DefineContract(client ethyl.EthylClient, abi string) (Contract, error) {
 
     var contract Contract;
     var abiDefinition ABI;
@@ -38,14 +46,17 @@ func DefineContract(abi string) (Contract, error) {
     }
 
     contract.Abi = abiDefinition;
+    contract.Client = client;
+
     return contract, nil;
 
 }
 
-func At(abi string, address string) (Contract, error) {
+func At(client ethyl.EthylClient, abi string, address string) (Contract, error) {
 
-    c, err := DefineContract(abi);
+    c, err := DefineContract(client, abi);
     c.Address = address;
+
     return c, err;
 
 }

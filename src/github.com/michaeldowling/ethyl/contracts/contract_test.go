@@ -4,6 +4,7 @@ import (
     "testing"
     "io/ioutil"
     "github.com/stretchr/testify/assert"
+    "github.com/michaeldowling/ethyl"
 )
 
 func TestContract_DefineContract(t *testing.T) {
@@ -18,6 +19,8 @@ func TestContract_DefineContract(t *testing.T) {
     assert.NotNil(t, contract);
 
     assert.Equal(t, "delegate", contract.Abi.InterfaceDefinitions[0].Name);
+
+    contract["myMethod"].sendTransaction(ethyl.TransactionInstructions{From:"", Gas:20000});
 
 
 }
