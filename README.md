@@ -3,6 +3,7 @@ A Golang Client Library for Communicating with Ethereum RPC Servers
 
 - [Usage](#usage)
 - [Net API](#api-net)
+- [Ethereum API](#api-ethereum)
 - [Contracts](#api-contracts)
 
 
@@ -35,6 +36,52 @@ _Get the [Network Version](https://github.com/ethereum/wiki/wiki/JSON-RPC#net_ve
 _Get the [Peer Count](https://github.com/ethereum/wiki/wiki/JSON-RPC#net_peercount)_:
 
     peerCount, _ := client.Net.PeerCount();
+    
+
+_Is the node [listening](https://github.com/ethereum/wiki/wiki/JSON-RPC#net_listening) for network connections?_:
+
+    isListening, _ := client.Net.IsListening();
+
+
+## API: Ethereum
+
+_Get the current [Ethereum Protocol Version](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_protocolversion)_:
+
+    version, _ := client.Eth.ProtocolVersion();
+    
+_Get the [list of addresses/accounts](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_accounts) owned by client_:
+
+    accounts, _ := client.Eth.Accounts();
+    for idx, account := range accounts {
+        log.Printf("Account Address #%i:  %s \n", idx, account);
+    }
+    
+_Get the [current price per gas](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gasprice) in wei_:
+
+    gasPrice, _ := client.Eth.GasPrice();
+    
+_Get the node's [sync status](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_syncing)_:
+
+    isSyncing, startingBlock, currentBlock, highestBlock , err := client.Eth.Syncing();
+
+
+_[Send a transaction](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sendtransaction) onto the network_:
+
+    client, clientErr := CreateClient("localhost", 8545);
+    instructions := TransactionInstructions{From:client.Accounts[0], To:"0xabd5d148b31f38a8d2aa9eb041c478d36dd51c35", Gas:200000, Value:10};
+    txhash, err := client.Eth.SendTransaction(instructions);
+    
+
+_Get the [information about a transaction](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactionbyhash), by the Transaction Hash_:
+
+    transactionObject, _ := client.Eth.GetTransactionByHash(txhash);
+    
+_Get the [receipt for an executed transaction](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactionreceipt), by the Transaction Hash_:
+
+    transactionReceipt, _ := client.Eth.GetTransactionReceipt(txhash);
+    
+    
+    
     
 
 
