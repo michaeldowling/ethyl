@@ -5,6 +5,7 @@ import (
     "io/ioutil"
     "github.com/stretchr/testify/assert"
     "github.com/michaeldowling/ethyl"
+    "log"
 )
 
 func TestContract_DefineContract(t *testing.T) {
@@ -78,10 +79,12 @@ func TestContract_MonitorDeploy(t *testing.T) {
     deployChannel := contract.MonitorDeploy(client, deployResults);
 
     // wait for deploy instructions
-    txhash := <-deployChannel;
+    txReceipt := <-deployChannel;
 
-    assert.NotNil(t, txhash);
-    assert.NotEmpty(t, txhash);
+    assert.NotNil(t, txReceipt);
+    assert.Empty(t, txReceipt.Error);
+    assert.NotEmpty(t, txReceipt.ContractAddress);
+    log.Printf("Contract Address:  %s \n", txReceipt.ContractAddress);
 
 
 }

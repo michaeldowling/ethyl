@@ -88,20 +88,20 @@ func (c *Contract) Deploy(client ethyl.EthylClient, config DeployConfig) (Deploy
 
 }
 
-func (c *Contract) MonitorDeploy(client ethyl.EthylClient, deployResults DeployResults) (chan string) {
+func (c *Contract) MonitorDeploy(client ethyl.EthylClient, deployResults DeployResults) (chan ethyl.TransactionReceipt) {
 
-    deploymentChannel := make(chan string);
+    deploymentChannel := make(chan ethyl.TransactionReceipt);
     go func() {
 
         for {
 
-            tx, err := client.Eth.GetTransactionByHash(deployResults.TransactionHash);
+            tx, err := client.Eth.GetTransactionReceipt(deployResults.TransactionHash);
             if (err != nil) {
-                deploymentChannel <- "";
+                deploymentChannel <- ethyl.TransactionReceipt{Error:err.Error()};
                 break;
             }
             if (tx.BlockNumber != 0) {
-                deploymentChannel <- tx.Hash; // TODO - need the contract address and use getTxReceipt :(
+                deploymentChannel <- tx;
                 break
             }
 

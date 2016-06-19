@@ -5,15 +5,12 @@ type EthereumNetworkError struct {
     Message string `json:"message"`
 }
 
-
 type EthereumNetworkRequest struct {
     JsonRpcVersion string `json:"jsonrpc"`
     Method         string `json:"method"`
     Params         []interface{} `json:"params"`
     Id             string `json:"id"`
 }
-
-
 
 type StringResultEthereumNetworkResponse struct {
     Id             string `json:"id"`
@@ -58,5 +55,22 @@ type TransactionObjectResultEthereumNetworkResponse struct {
     Id             string `json:"id"`
     JsonRpcVersion string `json:"jsonrpc"`
     Result         TransactionObject `json:"result"`
+}
+
+type TransactionReceiptObject struct {
+    TransactionHash   string `json:"transactionHash"`
+    TransactionIndex  string `json:"transactionIndex"`
+    BlockHash         string `json:"blockHash"`
+    BlockNumber       string `json:"blockNumber"`
+    CumulativeGasUsed string `json:"cumulativeGasUsed"`
+    GasUsed           string `json:"gasUsed"`
+    ContractAddress   string `json:"contractAddress"`
+    // Logs []string - TODO
+}
+
+type TransactionReceiptObjectResultEthereumNetworkResponse struct {
+    Id             string `json:"id"`
+    JsonRpcVersion string `json:"jsonrpc"`
+    Result         TransactionReceiptObject `json:"result"`
 }
 

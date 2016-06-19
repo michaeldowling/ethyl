@@ -19,7 +19,7 @@ type Transaction struct {
     Gas              int64
     GasPrice         int64
     Input            string
-};
+}
 
 type TransactionInstructions struct {
     From  string `json:"from"`
@@ -27,9 +27,19 @@ type TransactionInstructions struct {
     Gas   int64 `json:"gas,omitempty"`
     Data  string `json:"data,omitempty"`
     Value int64 `json:"value,omitempty"`
-
 }
 
+type TransactionReceipt struct {
+    TransactionHash   string `json:"transactionHash"`
+    TransactionIndex  int64 `json:"transactionIndex"`
+    BlockHash         string `json:"blockHash"`
+    BlockNumber       int64 `json:"blockNumber"`
+    CumulativeGasUsed int64 `json:"cumulativeGasUsed"`
+    GasUsed           int64 `json:"gasUsed"`
+    ContractAddress   string `json:"contractAddress"`
+    Error             string
+    // Logs []string - TODO
+}
 
 type EthAPI struct {
     Client *EthylClient
@@ -133,8 +143,36 @@ func (e *EthAPI) GetTransactionByHash(transactionHash string) (Transaction, erro
 
 }
 
-func (e *EthAPI) SendTransaction(instructions TransactionInstructions, transactionArguments ... interface{}) (string, error) {
+func (e *EthAPI) GetTransactionReceipt(transactionHash string) (TransactionReceipt, error) {
 
+    var result TransactionReceiptObjectResultEthereumNetworkResponse;
+    txid := []string{transactionHash};
+
+    e.Client.Call("eth_getTransactionReceipt", txid, &result);
+    tx := result.Result;
+
+    // Do some conversions
+    transactionIndex, _ := util.ToInt64(tx.TransactionIndex);
+    blockNumber, _ := util.ToInt64(tx.BlockNumber);
+    cumulativeGasUsed, _ := util.ToInt64(tx.CumulativeGasUsed);
+    gasUsed, _ := util.ToInt64(tx.GasUsed);
+
+    transactionReceipt := TransactionReceipt{
+        TransactionHash:tx.TransactionHash,
+        TransactionIndex:transactionIndex,
+        BlockHash:tx.BlockHash,
+        BlockNumber:blockNumber,
+        CumulativeGasUsed:cumulativeGasUsed,
+        GasUsed:gasUsed,
+        ContractAddress:tx.ContractAddress,
+    };
+
+    return transactionReceipt, nil;
+
+
+}
+
+func (e *EthAPI) SendTransaction(instructions TransactionInstructions, transactionArguments ... interface{}) (string, error) {
 
     var result StringResultEthereumNetworkResponse;
 
