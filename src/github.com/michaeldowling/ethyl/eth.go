@@ -2,7 +2,6 @@ package ethyl
 
 import (
     "log"
-    "strconv"
     "github.com/michaeldowling/ethyl/util"
     "errors"
 )
@@ -41,6 +40,13 @@ type TransactionReceipt struct {
     // Logs []string - TODO
 }
 
+type FilterOptions struct {
+    FromBlock string `json:"fromBlock,omitempty"`
+    ToBlock   string `json:"toBlock,omitempty"`
+    Address   string `json:"address,omitempty"`
+    Topics    []string `json:"topics,omitempty"`
+}
+
 type EthAPI struct {
     Client *EthylClient
 }
@@ -52,17 +58,20 @@ func CreateEthAPI(client *EthylClient) (EthAPI) {
 
 }
 
-func (e *EthAPI) ProtocolVersion() (uint64, error) {
+func (e *EthAPI) ProtocolVersion() (int64, error) {
 
     var result StringResultEthereumNetworkResponse;
 
     e.Client.Call("eth_protocolVersion", nil, &result);
     versionString := result.Result;
+    version, err := util.ToInt64(versionString);
 
-    log.Println("Version:  " + versionString);
+    if (err != nil) {
+        return 0, err;
+    }
 
-    version, err := strconv.ParseUint(versionString, 10, 64);
-    return version, err;
+    log.Printf("Version:  %d \n", version);
+    return version, nil;
 
 }
 
@@ -195,5 +204,22 @@ func (e *EthAPI) SendTransaction(instructions TransactionInstructions, transacti
 
 }
 
+func (e *EthAPI) NewFilter(options FilterOptions) (string, error) {
 
+    var result StringResultEthereumNetworkResponse;
+    txErr := e.Client.CallWithFilterOptions("eth_newFilter", options, &result);
+
+    if (txErr != nil) {
+        log.Printf("Problem with calling with filter options:  %s \n", txErr);
+        return "", txErr;
+    }
+
+    if (result.Error.Code != 0) {
+        return "", errors.New("Unable to create a filter with options given:  " + result.Error.Message);
+    }
+
+    return result.Result, nil;
+
+
+}
 

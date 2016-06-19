@@ -9,14 +9,12 @@ import (
 )
 
 type EthylClient struct {
-
-    Host string;
-    Port int;
+    Host     string;
+    Port     int;
     Accounts []string;
 
-    Net  NetAPI;
-    Eth  EthAPI;
-
+    Net      NetAPI;
+    Eth      EthAPI;
 }
 
 func CreateClient(host string, port int) (EthylClient, error) {
@@ -27,7 +25,7 @@ func CreateClient(host string, port int) (EthylClient, error) {
 
     // Pre-fetch accounts
     accounts, accountsErr := client.Eth.Accounts();
-    if(accountsErr != nil) {
+    if (accountsErr != nil) {
         return client, accountsErr;
     }
 
@@ -56,7 +54,6 @@ func (client *EthylClient) Call(methodName string, args []string, replyValue int
 
     }
 
-
     requestParamsBytes, err := json.Marshal(requestParams);
     log.Printf("Request Body:  %s \n", requestParamsBytes);
 
@@ -80,8 +77,48 @@ func (client *EthylClient) Call(methodName string, args []string, replyValue int
     return nil;
 }
 
-func (client *EthylClient) CallWithTransaction(methodName string, instructions TransactionInstructions, args []string, replyValue interface{}) (error) {
+func (client *EthylClient) CallWithFilterOptions(methodName string, filterOptions FilterOptions, replyValue interface{}) (error) {
 
+    // Marshall into JSON string
+    var requestParams EthereumNetworkRequest;
+
+    filterOptionsJson, marshalErr := json.Marshal(filterOptions);
+    log.Printf("Filter options (JSON):  %s \n", filterOptionsJson);
+    if (marshalErr != nil) {
+        log.Printf("Error while marshaling filter options into JSON:  %s \n", marshalErr.Error());
+        return marshalErr;
+    }
+
+    convertedArgs := make([]interface{}, 1);
+    // convertedArgs := make([][]byte, 1);
+    convertedArgs[0] = filterOptionsJson;
+    requestParams = EthereumNetworkRequest{Id:"67", JsonRpcVersion:"2.0", Method:methodName, Params:convertedArgs};
+
+    requestParamsBytes, err := json.Marshal(requestParams);
+    log.Printf("Request Body:  %s \n", requestParamsBytes);
+
+    if (err != nil) {
+        return err;
+    }
+
+    response, err := http.Post("http://localhost:8545", "application/json", bytes.NewBuffer(requestParamsBytes));
+    defer response.Body.Close();
+
+
+    if (err != nil) {
+        return err;
+    }
+
+    responseBody, _ := ioutil.ReadAll(response.Body);
+    log.Printf("Response Body:  %s", responseBody);
+
+    json.Unmarshal(responseBody, replyValue);
+
+    return nil;
+
+}
+
+func (client *EthylClient) CallWithTransaction(methodName string, instructions TransactionInstructions, args []string, replyValue interface{}) (error) {
 
     // Marshall into JSON string
     var requestParams EthereumNetworkRequest;
@@ -104,7 +141,6 @@ func (client *EthylClient) CallWithTransaction(methodName string, instructions T
         requestParams = EthereumNetworkRequest{Id:"67", JsonRpcVersion:"2.0", Method:methodName, Params:convertedArgs};
 
     }
-
 
     requestParamsBytes, err := json.Marshal(requestParams);
     log.Printf("Request Body:  %s \n", requestParamsBytes);

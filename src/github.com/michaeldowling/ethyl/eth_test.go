@@ -80,3 +80,21 @@ func TestEthAPI_SendTransaction_EtherTransfer(t *testing.T) {
 
 }
 
+func TestEthAPI_NewFilter(t *testing.T) {
+
+    client, clientErr := CreateClient("localhost", 8545);
+    assert.Nil(t, clientErr);
+
+    options := FilterOptions{FromBlock:"latest"};
+    filterId, filterErr := client.Eth.NewFilter(options);
+
+    assert.Nil(t, filterErr);
+    assert.NotNil(t, filterId);
+    assert.NotEmpty(t, filterId);
+
+    log.Println("Filter ID:  " + filterId);
+
+
+}
+
+
