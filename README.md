@@ -2,7 +2,8 @@
 A Golang Client Library for Communicating with Ethereum RPC Servers
 
 - [Usage](#usage)
-- [Net API](#API:-Net)
+- [Net API](#api-net)
+- [Contracts](#api-contracts)
 
 
 
