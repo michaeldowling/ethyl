@@ -1,6 +1,11 @@
 # ethyl
 A Golang Client Library for Communicating with Ethereum RPC Servers
 
+- [Usage](#usage)
+- [Net API](#API:-Net)
+
+
+
 ## Usage
 
 Ethyl attempts to match as closely as possible the JSON-RPC API that is published on the [Ethereum Wiki](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getblockbyhash)
@@ -18,7 +23,7 @@ _Get a client reference_:
     client, clientErr := ethyl.CreateClient("localhost", 8545);
 
 
-## API:  Net
+## API: Net
     
 
 _Get the [Network Version](https://github.com/ethereum/wiki/wiki/JSON-RPC#net_version)_:
@@ -32,7 +37,7 @@ _Get the [Peer Count](https://github.com/ethereum/wiki/wiki/JSON-RPC#net_peercou
     
 
 
-## API:  Contracts
+## API: Contracts
 
 _Import the library_:
 
