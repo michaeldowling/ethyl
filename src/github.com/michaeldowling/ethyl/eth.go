@@ -23,10 +23,10 @@ type Transaction struct {
 
 type TransactionInstructions struct {
     From  string `json:"from"`
-    To    string `json:"to"`
-    Gas   int64 `json:"gas"`
-    Data  string `json:"data"`
-    Value int64 `json:"value"`
+    To    string `json:"to,omitempty"`
+    Gas   int64 `json:"gas,omitempty"`
+    Data  string `json:"data,omitempty"`
+    Value int64 `json:"value,omitempty"`
 
 }
 
@@ -147,6 +147,10 @@ func (e *EthAPI) SendTransaction(instructions TransactionInstructions, transacti
 
     if (txErr != nil) {
         return "", errors.New("Unable to send transaction to network:  " + txErr.Error());
+    }
+
+    if (result.Error.Code != 0) {
+        return "", errors.New("Unable to send transaction to network:  " + result.Error.Message);
     }
 
     return result.Result, nil;

@@ -1,5 +1,11 @@
 package ethyl
 
+type EthereumNetworkError struct {
+    Code    int64 `json:"code"`
+    Message string `json:"message"`
+}
+
+
 type EthereumNetworkRequest struct {
     JsonRpcVersion string `json:"jsonrpc"`
     Method         string `json:"method"`
@@ -13,18 +19,21 @@ type StringResultEthereumNetworkResponse struct {
     Id             string `json:"id"`
     JsonRpcVersion string `json:"jsonrpc"`
     Result         string `json:"result"`
+    Error          EthereumNetworkError `json:"error"`
 }
 
 type GenericSliceResultEthereumNetworkResponse struct {
-    Id string `json:"is"`
+    Id             string `json:"is"`
     JsonRpcVersion string `json:"jsonepc"`
-    Result []interface{} `json:"result"`
+    Result         []interface{} `json:"result"`
+    Error          EthereumNetworkError `json:"error"`
 }
 
 type BooleanResultEthereumNetworkResponse struct {
     Id             string `json:"id"`
     JsonRpcVersion string `json:"jsonrpc"`
     Result         bool   `json:"result"`
+    Error          EthereumNetworkError `json:"error"`
 }
 
 

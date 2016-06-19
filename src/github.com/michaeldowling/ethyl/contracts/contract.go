@@ -4,7 +4,20 @@ import (
     "encoding/json"
     "log"
     "github.com/michaeldowling/ethyl"
+    "time"
 )
+
+type DeployConfig struct {
+    Gas      int
+    GasPrice int
+    Value    int
+}
+
+type DeployResults struct {
+    State           string
+    TransactionHash string
+    ContractAddress string
+}
 
 type Contract struct {
 
@@ -12,7 +25,6 @@ type Contract struct {
     Address      string
     ContractCode EVMCode
 
-    Client       ethyl.EthylClient
 
 }
 
@@ -35,7 +47,7 @@ type InputOutputDefinition struct {
     EthereumType string `json:"type"`
 }
 
-func DefineContract(client ethyl.EthylClient, abi string) (Contract, error) {
+func DefineContract(abi string, evmCode string) (Contract, error) {
 
     var contract Contract;
     var abiDefinition ABI;
@@ -46,7 +58,7 @@ func DefineContract(client ethyl.EthylClient, abi string) (Contract, error) {
     }
 
     contract.Abi = abiDefinition;
-    contract.Client = client;
+    contract.ContractCode = EVMCode(evmCode);
 
     return contract, nil;
 
@@ -54,16 +66,52 @@ func DefineContract(client ethyl.EthylClient, abi string) (Contract, error) {
 
 func At(client ethyl.EthylClient, abi string, address string) (Contract, error) {
 
-    c, err := DefineContract(client, abi);
+    c, err := DefineContract(abi, "");
     c.Address = address;
 
     return c, err;
 
 }
 
-func (c *Contract) New() (error) {
+func (c *Contract) Deploy(client ethyl.EthylClient, config DeployConfig) (DeployResults, error) {
 
-    return nil;
+    instr := ethyl.TransactionInstructions{From:client.Accounts[0], Gas:int64(config.Gas), Value:int64(config.Value), Data:string(c.ContractCode)};
+    txHash, err := client.Eth.SendTransaction(instr);
+
+    if (err != nil) {
+        log.Printf("Error while sending transaction to create contract:  %v", err);
+        return DeployResults{State:"error"}, err;
+    }
+
+    deployResults := DeployResults{State:"pending", TransactionHash:txHash};
+    return deployResults, nil;
+
+}
+
+func (c *Contract) MonitorDeploy(client ethyl.EthylClient, deployResults DeployResults) (chan string) {
+
+    deploymentChannel := make(chan string);
+    go func() {
+
+        for {
+
+            tx, err := client.Eth.GetTransactionByHash(deployResults.TransactionHash);
+            if (err != nil) {
+                deploymentChannel <- "";
+                break;
+            }
+            if (tx.BlockNumber != 0) {
+                deploymentChannel <- tx.Hash; // TODO - need the contract address and use getTxReceipt :(
+                break
+            }
+
+            time.Sleep(1 * time.Second);
+
+        }
+
+    }();
+
+    return deploymentChannel;
 
 }
 
