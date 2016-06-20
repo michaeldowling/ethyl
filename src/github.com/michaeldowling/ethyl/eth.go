@@ -40,12 +40,6 @@ type TransactionReceipt struct {
     // Logs []string - TODO
 }
 
-type FilterOptions struct {
-    FromBlock string `json:"fromBlock,omitempty"`
-    ToBlock   string `json:"toBlock,omitempty"`
-    Address   string `json:"address,omitempty"`
-    Topics    []string `json:"topics,omitempty"`
-}
 
 type EthAPI struct {
     Client *EthylClient

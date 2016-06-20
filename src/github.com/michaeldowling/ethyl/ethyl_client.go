@@ -80,19 +80,11 @@ func (client *EthylClient) Call(methodName string, args []string, replyValue int
 func (client *EthylClient) CallWithFilterOptions(methodName string, filterOptions FilterOptions, replyValue interface{}) (error) {
 
     // Marshall into JSON string
-    var requestParams EthereumNetworkRequest;
+    var requestParams EthereumFilterNetworkRequest;
+    filterOptionList := make([]FilterOptions, 1);
+    filterOptionList[0] = filterOptions;
 
-    filterOptionsJson, marshalErr := json.Marshal(filterOptions);
-    log.Printf("Filter options (JSON):  %s \n", filterOptionsJson);
-    if (marshalErr != nil) {
-        log.Printf("Error while marshaling filter options into JSON:  %s \n", marshalErr.Error());
-        return marshalErr;
-    }
-
-    convertedArgs := make([]interface{}, 1);
-    // convertedArgs := make([][]byte, 1);
-    convertedArgs[0] = filterOptionsJson;
-    requestParams = EthereumNetworkRequest{Id:"67", JsonRpcVersion:"2.0", Method:methodName, Params:convertedArgs};
+    requestParams = EthereumFilterNetworkRequest{Id:"67", JsonRpcVersion:"2.0", Method:methodName, Params:filterOptionList};
 
     requestParamsBytes, err := json.Marshal(requestParams);
     log.Printf("Request Body:  %s \n", requestParamsBytes);

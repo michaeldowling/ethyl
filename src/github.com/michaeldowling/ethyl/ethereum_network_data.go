@@ -12,6 +12,13 @@ type EthereumNetworkRequest struct {
     Id             string `json:"id"`
 }
 
+type EthereumFilterNetworkRequest struct {
+    JsonRpcVersion string `json:"jsonrpc"`
+    Method         string `json:"method"`
+    Params         []FilterOptions `json:"params"`
+    Id             string `json:"id"`
+}
+
 type StringResultEthereumNetworkResponse struct {
     Id             string `json:"id"`
     JsonRpcVersion string `json:"jsonrpc"`
@@ -74,3 +81,9 @@ type TransactionReceiptObjectResultEthereumNetworkResponse struct {
     Result         TransactionReceiptObject `json:"result"`
 }
 
+type FilterOptions struct {
+    FromBlock string `json:"fromBlock,omitempty"`
+    ToBlock   string `json:"toBlock,omitempty"`
+    Address   string `json:"address,omitempty"`
+    Topics    []string `json:"topics,omitempty"`
+}
