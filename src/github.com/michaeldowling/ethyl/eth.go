@@ -4,6 +4,7 @@ import (
     "log"
     "github.com/michaeldowling/ethyl/util"
     "errors"
+    "time"
 )
 
 type Transaction struct {
@@ -38,6 +39,19 @@ type TransactionReceipt struct {
     ContractAddress   string `json:"contractAddress"`
     Error             string
     // Logs []string - TODO
+}
+
+type LogEntry struct {
+    Type             string `json:"type"`
+    LogIndex         int64 `json:"logIndex"`
+    TransactionIndex int64 `json:"transactionIndex"`
+    TransactionHash  string `json:"transactionHash"`
+    BlockHash        string `json:"blockHash"`
+    BlockNumber      int64 `json:"blockNumber"`
+    Address          string `json:"address"`
+    Data             string `json:"data"`
+    Topics           []string `json:"topics"`
+
 }
 
 
@@ -198,6 +212,34 @@ func (e *EthAPI) SendTransaction(instructions TransactionInstructions, transacti
 
 }
 
+func (e *EthAPI) GetTransactionMonitor(txhash string) (chan TransactionReceipt, error) {
+
+    deploymentChannel := make(chan TransactionReceipt);
+    go func() {
+
+        for {
+
+            tx, err := e.GetTransactionReceipt(txhash);
+            if (err != nil) {
+                deploymentChannel <- TransactionReceipt{Error:err.Error()};
+                break;
+            }
+            if (tx.BlockNumber != 0) {
+                deploymentChannel <- tx;
+                break
+            }
+
+            time.Sleep(1 * time.Second);
+
+        }
+
+    }();
+
+    return deploymentChannel, nil;
+
+
+}
+
 func (e *EthAPI) NewFilter(options FilterOptions) (string, error) {
 
     var result StringResultEthereumNetworkResponse;
@@ -214,6 +256,44 @@ func (e *EthAPI) NewFilter(options FilterOptions) (string, error) {
 
     return result.Result, nil;
 
+
+}
+
+func (e *EthAPI) GetFilterChanges(filterId string) ([]LogEntry, error) {
+
+    var result FilterLogObjectResultEthereumNetworkResponse;
+    options := []string{filterId};
+
+    err := e.Client.Call("eth_getFilterChanges", options, &result);
+    if(err != nil) {
+        return nil, err;
+    }
+
+    entries := result.Result;
+    logs := make([]LogEntry, len(entries));
+    for idx, entry := range entries {
+
+        logIndex, _ := util.ToInt64(entry.LogIndex);
+        txIndex, _ := util.ToInt64(entry.TransactionIndex);
+        blockNumber, _ := util.ToInt64(entry.BlockNumber);
+
+        logEntry := LogEntry{
+            Type: entry.Type,
+            LogIndex:logIndex,
+            TransactionIndex:txIndex,
+            TransactionHash:entry.TransactionHash,
+            BlockHash:entry.BlockHash,
+            BlockNumber:blockNumber,
+            Address:entry.Address,
+            Data:entry.Data,
+            Topics:entry.Topics,
+        };
+
+        logs[idx] = logEntry;
+
+    }
+
+    return logs, nil;
 
 }
 
