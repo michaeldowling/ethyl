@@ -259,6 +259,29 @@ func (e *EthAPI) NewFilter(options FilterOptions) (string, error) {
 
 }
 
+func (e *EthAPI) GetCode(address string) (string, error) {
+
+    var result StringResultEthereumNetworkResponse;
+    options := []string{address, "latest"};
+
+    err := e.Client.Call("eth_getCode", options, &result);
+    if(err != nil) {
+        return "", err;
+    }
+
+    code := result.Result;
+    if(result.Result == "") {
+        return "", errors.New("Code field was empty");
+    }
+
+    // remove the Ox.  I mean, really now.
+
+
+    return result.Result, nil;
+
+
+}
+
 func (e *EthAPI) GetFilterChanges(filterId string) ([]LogEntry, error) {
 
     var result FilterLogObjectResultEthereumNetworkResponse;

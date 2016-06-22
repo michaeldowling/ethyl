@@ -58,6 +58,7 @@ func (client *EthylClient) Call(methodName string, args []string, replyValue int
     log.Printf("Request Body:  %s \n", requestParamsBytes);
 
     if (err != nil) {
+        log.Printf("There was an error with mashaling the request params:  %v \n", err);
         return err;
     }
 
@@ -66,6 +67,7 @@ func (client *EthylClient) Call(methodName string, args []string, replyValue int
 
 
     if (err != nil) {
+        log.Printf("There was an error with posting the request:  %v \n", err);
         return err;
     }
 
