@@ -22,7 +22,7 @@ _Import the library_:
 
 _Get a client reference_:
     
-    client, clientErr := ethyl.CreateClient("localhost", 8545);
+    client, clientErr := ethyl.CreateClient("http://localhost:8545");
 
 
 ## API: Net
@@ -67,7 +67,7 @@ _Get the node's [sync status](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth
 
 _[Send a transaction](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sendtransaction) onto the network_:
 
-    client, clientErr := CreateClient("localhost", 8545);
+    client, clientErr := CreateClient("http://localhost:8545");
     instructions := TransactionInstructions{From:client.Accounts[0], To:"0xabd5d148b31f38a8d2aa9eb041c478d36dd51c35", Gas:200000, Value:10};
     txhash, err := client.Eth.SendTransaction(instructions);
     
