@@ -67,7 +67,7 @@ func (client *EthylClient) Call(methodName string, args []string, replyValue int
 
 
     if (err != nil) {
-        LOGGER.Errorf("There was an error with posting the request:  %v \n", err);
+        LOGGER.Errorf("[Call] There was an error with posting the request:  %v \n", err);
         return err;
     }
     defer response.Body.Close();

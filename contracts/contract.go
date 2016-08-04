@@ -2,10 +2,12 @@ package contracts
 
 import (
     "encoding/json"
-    "log"
     "github.com/michaeldowling/ethyl"
     "time"
+    "github.com/op/go-logging"
 )
+
+var LOGGER = logging.MustGetLogger("ethyl");
 
 type DeployConfig struct {
     Gas      int
@@ -53,7 +55,7 @@ func DefineContract(abi string, evmCode string) (Contract, error) {
     var abiDefinition ABI;
     contractErr := json.Unmarshal([]byte(abi), &abiDefinition.InterfaceDefinitions);
     if (contractErr != nil) {
-        log.Printf("Unable to define contract:  %v", contractErr);
+        LOGGER.Infof("Unable to define contract:  %v", contractErr);
         return contract, contractErr;
     }
 
@@ -86,7 +88,7 @@ func (c *Contract) Deploy(client ethyl.EthylClient, config DeployConfig) (Deploy
     txHash, err := client.Eth.SendTransaction(instr);
 
     if (err != nil) {
-        log.Printf("Error while sending transaction to create contract:  %v", err);
+        LOGGER.Infof("Error while sending transaction to create contract:  %v", err);
         return DeployResults{State:"error"}, err;
     }
 
