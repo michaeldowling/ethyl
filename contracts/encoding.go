@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package util
+package contracts
 
-import (
-    "testing"
-    "github.com/stretchr/testify/assert"
-)
 
-func TestConvertHexToExpectedInteger(t *testing.T) {
+func EncodeFunctionSelector(functionName string, abi *ABI) (string) {
 
-    hex := "0x7DE";
-    num, err := ToInt64(hex);
 
-    assert.Nil(t, err);
-    assert.Equal(t, int64(2014), num);
 
+    return "";
 
 }

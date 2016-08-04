@@ -1,0 +1,55 @@
+[
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "name",
+        "type": "bytes"
+      },
+      {
+        "name": "z",
+        "type": "bool"
+      },
+      {
+        "name": "data",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "sam",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "xy",
+        "type": "fixed128x128[2]"
+      }
+    ],
+    "name": "bar",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "x",
+        "type": "uint32"
+      },
+      {
+        "name": "y",
+        "type": "bool"
+      }
+    ],
+    "name": "baz",
+    "outputs": [
+      {
+        "name": "r",
+        "type": "bool"
+      }
+    ],
+    "type": "function"
+  }
+]
