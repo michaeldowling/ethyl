@@ -105,7 +105,7 @@ _Define a contract for deployment_:
     
 _If you want, you can actively monitor the contract's state on the blockchain_:
  
-    deployChan := contract.MonitorDeploy(client, deployConfig);
+    deployChan := contract.MonitorDeploy(client, deployResults);
     transactionReceipt := <-deployChan;
     
     
