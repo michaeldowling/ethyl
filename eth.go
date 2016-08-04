@@ -269,7 +269,6 @@ func (e *EthAPI) GetCode(address string) (string, error) {
         return "", err;
     }
 
-    code := result.Result;
     if(result.Result == "") {
         return "", errors.New("Code field was empty");
     }

@@ -5,11 +5,15 @@ import (
     "github.com/stretchr/testify/assert"
     "log"
     "strconv"
+    "os"
 )
+
 
 func TestAPINetVersion(t *testing.T) {
 
-    client, clientErr := CreateClient("localhost", 8545);
+    testUrl := os.Getenv("TEST_RPC_URL");
+
+    client, clientErr := CreateClient(testUrl);
     assert.Nil(t, clientErr);
 
     version, err := client.Net.Version();
@@ -22,7 +26,9 @@ func TestAPINetVersion(t *testing.T) {
 
 func TestAPINetIsListening(t *testing.T) {
 
-    client, clientErr := CreateClient("localhost", 8545);
+    testUrl := os.Getenv("TEST_RPC_URL");
+
+    client, clientErr := CreateClient(testUrl);
     assert.Nil(t, clientErr);
 
     isListening, err := client.Net.IsListening();
@@ -37,7 +43,9 @@ func TestAPINetIsListening(t *testing.T) {
 
 func TestAPINetPeerCount(t *testing.T) {
 
-    client, clientErr := CreateClient("localhost", 8545);
+    testUrl := os.Getenv("TEST_RPC_URL");
+
+    client, clientErr := CreateClient(testUrl);
     assert.Nil(t, clientErr);
 
     peerCount, _ := client.Net.PeerCount();

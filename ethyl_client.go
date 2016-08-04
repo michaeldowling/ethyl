@@ -5,21 +5,22 @@ import (
     "bytes"
     "io/ioutil"
     "encoding/json"
-    "log"
+    "github.com/op/go-logging"
 )
 
+var LOGGER = logging.MustGetLogger("ethyl");
+
 type EthylClient struct {
-    Host     string;
-    Port     int;
+    Url     string;
     Accounts []string;
 
     Net      NetAPI;
     Eth      EthAPI;
 }
 
-func CreateClient(host string, port int) (EthylClient, error) {
+func CreateClient(url string) (EthylClient, error) {
 
-    client := EthylClient{Host:host, Port:port};
+    client := EthylClient{Url:url};
     client.Net = CreateNetAPI(&client);
     client.Eth = CreateEthAPI(&client);
 
@@ -55,24 +56,24 @@ func (client *EthylClient) Call(methodName string, args []string, replyValue int
     }
 
     requestParamsBytes, err := json.Marshal(requestParams);
-    log.Printf("Request Body:  %s \n", requestParamsBytes);
+    LOGGER.Infof("Request Body:  %s \n", requestParamsBytes);
 
     if (err != nil) {
-        log.Printf("There was an error with mashaling the request params:  %v \n", err);
+        LOGGER.Infof("There was an error with mashaling the request params:  %v \n", err);
         return err;
     }
 
-    response, err := http.Post("http://localhost:8545", "application/json", bytes.NewBuffer(requestParamsBytes));
+    response, err := http.Post(client.Url, "application/json", bytes.NewBuffer(requestParamsBytes));
+
+
+    if (err != nil) {
+        LOGGER.Errorf("There was an error with posting the request:  %v \n", err);
+        return err;
+    }
     defer response.Body.Close();
 
-
-    if (err != nil) {
-        log.Printf("There was an error with posting the request:  %v \n", err);
-        return err;
-    }
-
     responseBody, _ := ioutil.ReadAll(response.Body);
-    log.Printf("Response Body:  %s", responseBody);
+    LOGGER.Infof("Response Body:  %s", responseBody);
 
     json.Unmarshal(responseBody, replyValue);
 
@@ -89,13 +90,13 @@ func (client *EthylClient) CallWithFilterOptions(methodName string, filterOption
     requestParams = EthereumFilterNetworkRequest{Id:"67", JsonRpcVersion:"2.0", Method:methodName, Params:filterOptionList};
 
     requestParamsBytes, err := json.Marshal(requestParams);
-    log.Printf("Request Body:  %s \n", requestParamsBytes);
+    LOGGER.Infof("Request Body:  %s \n", requestParamsBytes);
 
     if (err != nil) {
         return err;
     }
 
-    response, err := http.Post("http://localhost:8545", "application/json", bytes.NewBuffer(requestParamsBytes));
+    response, err := http.Post(client.Url, "application/json", bytes.NewBuffer(requestParamsBytes));
     defer response.Body.Close();
 
 
@@ -104,7 +105,7 @@ func (client *EthylClient) CallWithFilterOptions(methodName string, filterOption
     }
 
     responseBody, _ := ioutil.ReadAll(response.Body);
-    log.Printf("Response Body:  %s", responseBody);
+    LOGGER.Infof("Response Body:  %s", responseBody);
 
     json.Unmarshal(responseBody, replyValue);
 
@@ -137,13 +138,13 @@ func (client *EthylClient) CallWithTransaction(methodName string, instructions T
     }
 
     requestParamsBytes, err := json.Marshal(requestParams);
-    log.Printf("Request Body:  %s \n", requestParamsBytes);
+    LOGGER.Infof("Request Body:  %s \n", requestParamsBytes);
 
     if (err != nil) {
         return err;
     }
 
-    response, err := http.Post("http://localhost:8545", "application/json", bytes.NewBuffer(requestParamsBytes));
+    response, err := http.Post(client.Url, "application/json", bytes.NewBuffer(requestParamsBytes));
     defer response.Body.Close();
 
 
@@ -152,7 +153,7 @@ func (client *EthylClient) CallWithTransaction(methodName string, instructions T
     }
 
     responseBody, _ := ioutil.ReadAll(response.Body);
-    log.Printf("Response Body:  %s", responseBody);
+    LOGGER.Infof("Response Body:  %s", responseBody);
 
     json.Unmarshal(responseBody, replyValue);
 

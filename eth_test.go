@@ -5,11 +5,16 @@ import (
     "github.com/stretchr/testify/assert"
     "log"
     "github.com/michaeldowling/ethyl/util"
+    "os"
 )
+
+
 
 func TestAPI_EthProtocolVersion(t *testing.T) {
 
-    client, clientErr := CreateClient("localhost", 8545);
+    testUrl := os.Getenv("TEST_RPC_URL");
+
+    client, clientErr := CreateClient(testUrl);
     assert.Nil(t, clientErr);
 
     protocolVersion, _ := client.Eth.ProtocolVersion();
@@ -19,7 +24,9 @@ func TestAPI_EthProtocolVersion(t *testing.T) {
 
 func TestAPI_EthGasPrice(t *testing.T) {
 
-    client, clientErr := CreateClient("localhost", 8545);
+    testUrl := os.Getenv("TEST_RPC_URL");
+
+    client, clientErr := CreateClient(testUrl);
     assert.Nil(t, clientErr);
 
     gasPrice, _ := client.Eth.GasPrice();
@@ -31,7 +38,9 @@ func TestAPI_EthGasPrice(t *testing.T) {
 
 func TestAPI_EthSyncing(t *testing.T) {
 
-    client, clientErr := CreateClient("localhost", 8545);
+    testUrl := os.Getenv("TEST_RPC_URL");
+
+    client, clientErr := CreateClient(testUrl);
     assert.Nil(t, clientErr);
 
     isSyncing, _, _, _, err := client.Eth.Syncing();
@@ -42,7 +51,9 @@ func TestAPI_EthSyncing(t *testing.T) {
 
 func TestEthAPI_Accounts(t *testing.T) {
 
-    client, clientErr := CreateClient("localhost", 8545);
+    testUrl := os.Getenv("TEST_RPC_URL");
+
+    client, clientErr := CreateClient(testUrl);
     assert.Nil(t, clientErr);
 
     accounts, err := client.Eth.Accounts();
@@ -54,7 +65,9 @@ func TestEthAPI_Accounts(t *testing.T) {
 
 func TestEthAPI_GetTransactionByHash(t *testing.T) {
 
-    client, clientErr := CreateClient("localhost", 8545);
+    testUrl := os.Getenv("TEST_RPC_URL");
+
+    client, clientErr := CreateClient(testUrl);
     assert.Nil(t, clientErr);
 
     tx, err := client.Eth.GetTransactionByHash("0xe564bd605dcf1e70646e6e0a13294199cdb6f026fd74a11357f07d9863c8b989");
@@ -66,7 +79,9 @@ func TestEthAPI_GetTransactionByHash(t *testing.T) {
 
 func TestEthAPI_SendTransaction_EtherTransfer(t *testing.T) {
 
-    client, clientErr := CreateClient("localhost", 8545);
+    testUrl := os.Getenv("TEST_RPC_URL");
+
+    client, clientErr := CreateClient(testUrl);
     assert.Nil(t, clientErr);
 
     // get account first
@@ -83,7 +98,9 @@ func TestEthAPI_SendTransaction_EtherTransfer(t *testing.T) {
 
 func TestEthAPI_NewFilter(t *testing.T) {
 
-    client, clientErr := CreateClient("localhost", 8545);
+    testUrl := os.Getenv("TEST_RPC_URL");
+
+    client, clientErr := CreateClient(testUrl);
     assert.Nil(t, clientErr);
 
     options := FilterOptions{FromBlock:"latest"};
@@ -101,7 +118,7 @@ func TestEthAPI_NewFilter(t *testing.T) {
 
 //func TestEthAPI_GetFilterChanges(t *testing.T) {
 //
-//    client, clientErr := CreateClient("localhost", 8545);
+//    client, clientErr := CreateClient(testHost, 8545);
 //    assert.Nil(t, clientErr);
 //
 //    options := FilterOptions{ToBlock:"latest"};

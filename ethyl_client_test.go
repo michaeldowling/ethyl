@@ -3,15 +3,18 @@ package ethyl
 import (
     "testing"
     "github.com/stretchr/testify/assert"
+    "os"
 )
+
 
 func TestCreateClient(t *testing.T) {
 
-    client, err := CreateClient("localhost", 8545);
+    testUrl := os.Getenv("TEST_RPC_URL")
+
+    client, err := CreateClient(testUrl);
     assert.Nil(t, err);
     assert.NotNil(t, client);
-    assert.Equal(t, "localhost", client.Host);
-    assert.Equal(t, 8545, client.Port);
+    assert.Equal(t, testUrl, client.Url);
 
 }
 
