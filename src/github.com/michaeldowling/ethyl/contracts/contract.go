@@ -69,6 +69,13 @@ func At(client ethyl.EthylClient, abi string, address string) (Contract, error) 
     c, err := DefineContract(abi, "");
     c.Address = address;
 
+    // get code
+    code, codeErr := client.Eth.GetCode(address);
+    if(codeErr != nil) {
+        return c, codeErr;
+    }
+
+    c.ContractCode = EVMCode(code);
     return c, err;
 
 }

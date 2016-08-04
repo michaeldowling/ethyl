@@ -4,6 +4,7 @@ import (
     "testing"
     "github.com/stretchr/testify/assert"
     "log"
+    "github.com/michaeldowling/ethyl/util"
 )
 
 func TestAPI_EthProtocolVersion(t *testing.T) {
@@ -92,9 +93,47 @@ func TestEthAPI_NewFilter(t *testing.T) {
     assert.NotNil(t, filterId);
     assert.NotEmpty(t, filterId);
 
-    log.Println("Filter ID:  " + filterId);
+    filterIdInt, _ := util.ToInt64(filterId);
+    log.Printf("Filter ID:  %v \n", filterIdInt);
 
 
 }
+
+//func TestEthAPI_GetFilterChanges(t *testing.T) {
+//
+//    client, clientErr := CreateClient("localhost", 8545);
+//    assert.Nil(t, clientErr);
+//
+//    options := FilterOptions{ToBlock:"latest"};
+//    filterId, filterErr := client.Eth.NewFilter(options);
+//
+//    assert.Nil(t, filterErr);
+//    assert.NotNil(t, filterId);
+//    assert.NotEmpty(t, filterId);
+//
+//    // execute a TX
+//    instructions := TransactionInstructions{
+//        From:client.Accounts[0],
+//        To:client.Accounts[0],
+//        Value:100,
+//    };
+//    txHash, err := client.Eth.SendTransaction(instructions);
+//    assert.Nil(t, err);
+//
+//    txMonitor, monitorErr := client.Eth.GetTransactionMonitor(txHash);
+//    assert.Nil(t, monitorErr);
+//
+//    // Wait for TX to confirm
+//    log.Println("Waiting for TX to confirm");
+//    <-txMonitor;
+//
+//    result, changesErr := client.Eth.GetFilterChanges(filterId);
+//    assert.Nil(t, changesErr);
+//    assert.NotNil(t, result);
+//    assert.NotEmpty(t, result);
+//
+//
+//
+//}
 
 
