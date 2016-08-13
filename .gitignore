@@ -27,3 +27,8 @@ _testmain.go
 *.iml
 .idea
 
+# Golang
+pkg
+bin
+
+
